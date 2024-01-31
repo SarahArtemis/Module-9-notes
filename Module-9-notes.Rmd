@@ -1,0 +1,79 @@
+Module 9 Notes
+
+5-number summary
+  min
+  1st quartile
+  median
+  3rd quartile
+  max
+  sometimes mean
+
+Pulling from local computer
+```{r}
+install.packages("sjmisc")
+library(tidyverse)
+
+d<-read.csv("Country-Data-2016.csv")
+names(d)
+```
+
+Pulling from github
+```{r}
+f <- "https://raw.githubusercontent.com/difiore/ada-2024-datasets/main/Country-Data-2016.csv"
+d <- read_csv(f, col_names = TRUE)
+names(d)
+```
+
+```{r}
+summary(d)
+unique(d$country)
+#Can also do...
+c<-length(unique(d$country))
+print(c)
+ncol(d)
+```
+Variables = 16
+Observations = 248
+How many countries = 248
+
+```{r}
+median(d$area, na.rm = TRUE)
+median(d$population, na.rm = TRUE)
+
+```
+
+Create new density column
+```{r}
+d$density<-(d$population / d$area)
+
+ncol(d)
+```
+Variables = 17 because of addition of density column.
+
+Order countries by decreasing density 
+```{r}
+d <- d[order(-d$density), ]
+```
+
+Create new dataframe with top 20 highest densities and calculate median area. 
+```{r}
+s <- d[1:20, ]
+med_area <- median(s$area, na.rm = TRUE)
+med_area
+```
+Top 10 and bottom 10 density
+```{r}
+topten<-d[1:10, ]
+
+bottomten<-d[order(d$density), ]
+bottomten<-bottomten[1:10, ]
+
+#OR
+
+topten<-head(d,10)
+bottomten<-tail(d,10)
+
+#using tail function includes the countries with NA densities. Reordering by increasing density then extracting first 10 rows does NOT include NA densities. 
+```
+
+
